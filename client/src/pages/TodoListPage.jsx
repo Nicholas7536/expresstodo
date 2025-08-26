@@ -19,7 +19,7 @@ export default function TodoListPage() {
   const [tasks, setTasks] = useState([]);
   const [error, setError] = useState(null);
   const [editing, setEditing] = useState(null);
-  const { token, logout } = useContext(AuthContext);
+  const { token, logout, user } = useContext(AuthContext);
 
   const fetchTasks = async () => {
     try {
@@ -35,10 +35,17 @@ export default function TodoListPage() {
     }
   };
 
-  useEffect(() => {
-    if (token) fetchTasks();
-  }, [token]);
 
+  const remove = async (id) => {
+    try {
+      await axios.delete(`/api/tasks/${id}`);
+      setTasks((t) => t.filter((x) => x._id !== id));
+    } catch (err) {
+      setError('Error deleting');
+    }
+  };
+
+  // Add missing addTask and editTask functions
   const addTask = async (data) => {
     try {
       const res = await axios.post('/api/tasks', data);
@@ -58,45 +65,53 @@ export default function TodoListPage() {
     }
   };
 
+  // Fix toggle function for checkbox
   const toggle = async (task) => {
     try {
-      const res = await axios.put(`/api/tasks/${task._id}`, { completed: !task.completed });
+      const res = await axios.put(`/api/tasks/${task._id}`, { ...task, completed: !task.completed });
       setTasks((t) => t.map((x) => (x._id === res.data._id ? res.data : x)));
     } catch (err) {
       setError('Error updating');
     }
   };
 
-  const remove = async (id) => {
-    try {
-      await axios.delete(`/api/tasks/${id}`);
-      setTasks((t) => t.filter((x) => x._id !== id));
-    } catch (err) {
-      setError('Error deleting');
-    }
-  };
+  useEffect(() => {
+    if (token) fetchTasks();
+  }, [token]);
 
   return (
-    <Box sx={{ mt: 2 }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant="h5">My Tasks</Typography>
-        <Button variant="outlined" color="error" onClick={logout}>Logout</Button>
+  <Box sx={{ mt: { xs: 2, sm: 4 }, bgcolor: '#fff', p: { xs: 1, sm: 2 }, borderRadius: 2, boxShadow: 2, minHeight: '70vh', width: '100%', maxWidth: 600, mx: 'auto', mb: 4 }}>
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: { xs: 'flex-start', sm: 'center' }, mb: 2 }}>
+        <Typography variant="h5" sx={{ color: '#464242ff', fontWeight: 700, wordBreak: 'break-word', fontSize: { xs: '1.2rem', sm: '2rem' } }}>
+          {user?.username ? `${user.username}'s Tasks` : 'My Tasks'}
+        </Typography>
+        <Button variant="outlined" color="error" onClick={logout} sx={{ mt: { xs: 1, sm: 0 }, alignSelf: { xs: 'flex-end', sm: 'center' } }}>Logout</Button>
       </Box>
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-      {!editing && <TaskForm onSave={addTask} />}
-      {editing && (
-        <TaskForm
-          initial={editing}
-          onSave={(data) => editTask(editing._id, data)}
-        />
+      {!editing && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+          <Box sx={{ width: { xs: '100%', sm: '70%' }}}>
+            <TaskForm onSave={addTask} />
+          </Box>
+        </Box>
       )}
-      <List>
+      {editing && (
+        <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
+          <Box sx={{ width: { xs: '100%', sm: '100%' } }}>
+            <TaskForm
+              initial={editing}
+              onSave={(data) => editTask(editing._id, data)}
+            />
+          </Box>
+        </Box>
+      )}
+      <List sx={{ bgcolor: '#fff', borderRadius: 2 }}>
         {Array.isArray(tasks) && tasks.length > 0 ? tasks.map((task) => (
-          <ListItem key={task._id} sx={{ bgcolor: task.completed ? 'action.selected' : 'background.paper', mb: 1, borderRadius: 1 }}>
+          <ListItem key={task._id} sx={{ bgcolor: '#fff', mb: 1, borderRadius: 1, boxShadow: 1 }}>
             <Checkbox checked={task.completed} onChange={() => toggle(task)} />
             <ListItemText
-              primary={<Typography variant="subtitle1" sx={{ textDecoration: task.completed ? 'line-through' : 'none' }}>{task.title}</Typography>}
-              secondary={<Typography variant="body2" color="text.secondary">{task.description}</Typography>}
+              primary={<Typography variant="subtitle1" sx={{ textDecoration: task.completed ? 'line-through' : 'none', color: '#222' }}>{task.title}</Typography>}
+              secondary={<Typography variant="body2" sx={{ color: '#555' }}>{task.description}</Typography>}
             />
             <ListItemSecondaryAction>
               <IconButton edge="end" color="primary" onClick={() => setEditing(task)}><EditIcon /></IconButton>

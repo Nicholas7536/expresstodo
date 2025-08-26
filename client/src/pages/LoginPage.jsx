@@ -29,10 +29,10 @@ export default function LoginPage() {
   };
 
   return (
-    <Box sx={{ mt: 4 }}>
-      <Typography variant="h5" sx={{ mb: 2 }}>Login</Typography>
+  <Box sx={{ mt: 2, p: 2, bgcolor: '#fff', borderRadius: 2, boxShadow: 2, maxWidth: 400, mx: 'auto', width: '100%' }}>
+      <Typography variant="h5" sx={{ mb: 2, fontWeight: 700, textAlign: 'center' }}>Login</Typography>
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-      <Box component="form" onSubmit={submit}>
+  <Box component="form" onSubmit={submit} sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%' }}>
         <TextField
           name="email"
           label="Email"
@@ -40,7 +40,9 @@ export default function LoginPage() {
           onChange={handle}
           fullWidth
           margin="normal"
-          size="small"
+          size="medium"
+          required
+          InputLabelProps={{ shrink: true }}
         />
         <TextField
           name="password"
@@ -50,9 +52,11 @@ export default function LoginPage() {
           onChange={handle}
           fullWidth
           margin="normal"
-          size="small"
+          size="medium"
+          required
+          InputLabelProps={{ shrink: true }}
         />
-        <Button type="submit" variant="contained" color="primary" sx={{ mt: 1 }}>
+        <Button type="submit" variant="contained" color="primary" sx={{ minWidth: 100, alignSelf: 'center', mt: 2 }}>
           Login
         </Button>
       </Box>

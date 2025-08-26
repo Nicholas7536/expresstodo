@@ -7,17 +7,39 @@ export default function TaskForm({ onSave, initial = {} }) {
   const [form, setForm] = useState({ title: initial.title || '', description: initial.description || '' });
 
   useEffect(() => {
-    setForm({ title: initial.title || '', description: initial.description || '' });
-  }, [initial]);
+    // Only update form state if initial values actually change
+    setForm((prev) => {
+      if (prev.title !== (initial.title || '') || prev.description !== (initial.description || '')) {
+        return { title: initial.title || '', description: initial.description || '' };
+      }
+      return prev;
+    });
+  }, [initial.title, initial.description]);
 
   const handle = (e) => setForm({ ...form, [e.target.name]: e.target.value });
   const submit = (e) => {
     e.preventDefault();
     onSave(form);
+    setForm({ title: '', description: '' });
   };
 
+
   return (
-    <Box component="form" onSubmit={submit} sx={{ mb: 2 }}>
+    <Box
+      component="form"
+      onSubmit={submit}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        gap: 2,
+        bgcolor: 'background.paper',
+        p: 2,
+        borderRadius: 2,
+        boxShadow: 1,
+        mb: 2,
+        width: '100%',
+      }}
+    >
       <TextField
         name="title"
         label="Title"
@@ -25,7 +47,10 @@ export default function TaskForm({ onSave, initial = {} }) {
         onChange={handle}
         fullWidth
         margin="normal"
-        size="small"
+        size="medium"
+        required
+        InputLabelProps={{ shrink: true }}
+        sx={{ width: '100%' }}
       />
       <TextField
         name="description"
@@ -34,9 +59,13 @@ export default function TaskForm({ onSave, initial = {} }) {
         onChange={handle}
         fullWidth
         margin="normal"
-        size="small"
+        size="medium"
+        multiline
+        minRows={2}
+        InputLabelProps={{ shrink: true }}
+        sx={{ width: '100%' }}
       />
-      <Button type="submit" variant="contained" color="success" sx={{ mt: 1 }}>
+      <Button type="submit" variant="contained" color="success" sx={{ width: '20%' }}>
         Save
       </Button>
     </Box>
