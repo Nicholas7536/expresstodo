@@ -1,6 +1,9 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
 
+// Set axios baseURL from VITE_API_URL
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
