@@ -16,12 +16,10 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setReady(true);
-      console.log('Set axios Authorization header:', axios.defaults.headers.common['Authorization']);
     } else {
       localStorage.removeItem('token');
       delete axios.defaults.headers.common['Authorization'];
       setReady(false);
-      console.log('Removed axios Authorization header');
     }
   }, [token]);
 
@@ -30,7 +28,6 @@ export const AuthProvider = ({ children }) => {
     const reqInterceptor = axios.interceptors.request.use((config) => {
       if (token) {
         config.headers['Authorization'] = `Bearer ${token}`;
-        console.log('Interceptor set header:', config.headers['Authorization']);
       }
       return config;
     });
