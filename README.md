@@ -46,7 +46,7 @@ A monorepo project for a modern, minimal To-Do application with a React (Vite) f
 ### Setup
 1. Clone the repository:
 	```sh
-	git clone https://github.com/yourusername/todo-app-monorepo.git
+	[git clone https://github.com/yourusername/todo-app-monorepo.git](https://github.com/Nicholas7536/expresstodo.git)
 	cd todo-app-monorepo
 	```
 2. Install dependencies for all workspaces:
