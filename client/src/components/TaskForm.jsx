@@ -38,6 +38,9 @@ export default function TaskForm({ onSave, initial = {} }) {
         boxShadow: 1,
         mb: 2,
         width: '100%',
+        maxWidth: '100%',
+        boxSizing: 'border-box',
+        overflowX: 'hidden',
       }}
     >
       <TextField
@@ -65,7 +68,7 @@ export default function TaskForm({ onSave, initial = {} }) {
         InputLabelProps={{ shrink: true }}
         sx={{ width: '100%' }}
       />
-      <Button type="submit" variant="contained" color="success" sx={{ width: '20%' }}>
+      <Button type="submit" variant="contained" color="success" sx={{ width: '30%', alignSelf: 'center' }}>
         Save
       </Button>
     </Box>

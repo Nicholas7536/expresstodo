@@ -90,7 +90,7 @@ export default function TodoListPage() {
       {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
       {!editing && (
         <Box sx={{ display: 'flex', justifyContent: 'center', mb: 2 }}>
-          <Box sx={{ mx: 'auto', width: '100%'}}>
+          <Box sx={{ mx: 'auto', width: '100%', maxWidth: 400 }}>
             <TaskForm onSave={addTask} />
           </Box>
         </Box>
